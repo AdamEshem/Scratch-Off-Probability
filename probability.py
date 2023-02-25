@@ -1,6 +1,7 @@
 import requests
 import bs4
 from bs4 import BeautifulSoup
+import re
 
 def collect_page_values(name):
     page = requests.get('https://www.ohiolottery.com/' + name)
@@ -27,10 +28,16 @@ def collect_game_names():
     
     return names
 
+def extract_cost(name):
+    cost = re.findall(r'\d+', name[19: 23])
+    return cost[0]
+
 names = collect_game_names()
 print(names)
 dict = {}
 for i in names:
+    cost = extract_cost(i)
     values = collect_page_values(i)
-    dict[i] = values
-    print(dict)
+    dict[cost] = values
+
+
